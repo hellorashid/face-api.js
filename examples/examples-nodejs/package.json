@@ -3,5 +3,9 @@
   "license": "MIT",
   "dependencies": {
     "face-api.js": "../../"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.4",
+    "tslib": "^2.6.2"
   }
 }

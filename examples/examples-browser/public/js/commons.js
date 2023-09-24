@@ -34,7 +34,7 @@ function renderNavBar(navbarId, exampleUri) {
     },
     {
       uri: 'face_expression_recognition',
-      name: 'Face Expression Recognition'
+      name: 'Vibe Check'
     },
     {
       uri: 'age_and_gender_recognition',
