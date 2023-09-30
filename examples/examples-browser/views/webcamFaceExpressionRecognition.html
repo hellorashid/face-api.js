@@ -56,6 +56,13 @@
   </body>
 
   <script>
+
+    const urls = { 
+      // surprised: '',  // URL to alexa routine to trigger lights
+      // neutral:  '', // URL to alexa routine to trigger lights
+      // happy: ''   // URL to alexa routine to trigger lights
+    }
+
     let forwardTimes = []
     let withBoxes = true
 
@@ -130,10 +137,38 @@
     };
 
     let current_gradient = linear_gradients.neutral
+    let current_lights = 'neutral'
+    let prev_lights = 'neutral'
+
 
     function updateBg(gradient) { 
       console.log("UPDATING...")
+
+      // if (current_gradient === gradient) { 
+      //   console.log("no change")
+      // } else { 
+      //   console.log("CHANGE")
+      //   current_gradient = gradient
+      //   $('#bg').css('background', gradient)
+      // }
+
       $('#bg').css('background', gradient)
+    }
+
+    function updateLights (url) { 
+      console.log("💡 UPDATING LIGHTS...")
+
+      if (current_lights === prev_lights) { 
+        console.log("no change")
+      } else { 
+        console.log("CHANGE")
+        prev_lights = current_lights
+        fetch(urls[current_lights], { mode: 'no-cors' })
+          .then( res => console.log(res) )
+      }
+
+      // fetch(urls.happy, { mode: 'no-cors' })
+      //   .then( res => console.log(res) )
     }
 
 
@@ -179,18 +214,28 @@
         // $('#bg').css('background', grad3)
 
 
-        if (rounded.happy > 0.5) {
+        if (rounded.happy > 0.3) {
           current_gradient = linear_gradients.happy
+          current_lights = 'happy'
+
           // $('#happy').css('opacity', rounded.happy)
           // $('#bg').css('background',linear_gradients.happy )
+          
+
         } else if (rounded.neutral > 0.5) {
           current_gradient = linear_gradients.neutral
+          current_lights = 'neutral'
+
+
           // $('#bg').css('background', 'linear-gradient(to right, #D3CCE3, #E9E4F0)')
         } else if (rounded.sad > 0.5) { 
           current_gradient = linear_gradients.sad
+          
           // $('#bg').css('background', 'linear-gradient(to right, #000046, #2c3e50)')
         } else if (rounded.surprised > 0.5) { 
           current_gradient = linear_gradients.surprised
+          current_lights = 'surprised'
+
           // $('#bg').css('background', 'linear-gradient(to right, #CB356B, #BD3F32)')
         } 
         
@@ -204,8 +249,7 @@
         // } else {
         //   $('#bg').css('background', 'linear-gradient(to right, #000046, #1CB5E0)')
         // }
-
-       
+        
         
         const canvas = $('#overlay').get(0)
         const dims = faceapi.matchDimensions(canvas, videoEl, true)
@@ -223,7 +267,12 @@
 
     setInterval( () => { 
           updateBg(current_gradient)
-        }, 500)
+          updateLights()
+        }, 1500)
+
+      // setInterval( () => { 
+      //     updateLights()
+      // }, 5000)
 
     async function run() {
       // load face detection and face expression recognition models
